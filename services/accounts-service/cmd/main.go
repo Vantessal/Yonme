@@ -20,7 +20,7 @@ func main() {
 	router := gin.Default()
 	routes.RegisterAccountRoutes(router, handler)
 	
-	if err := router.Run(":8080"); err != nil {
+	if err := router.Run(":8081"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }

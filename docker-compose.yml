@@ -16,6 +16,18 @@ services:
     build:
       context: ./services/auth-service
     container_name: yonme_auth_service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+    restart: always
+
+  accounts-service:
+    build:
+      context: ./services/accounts-service
+    container_name: yonme_accounts_service
+    ports:
+      - "8081:8081"
     depends_on:
       - db
     restart: always
@@ -29,6 +41,8 @@ services:
       - "80:80"
     depends_on:
       - auth-service
+      - accounts-service
+      - db
 
 volumes:
   db_data: {}

@@ -3,14 +3,13 @@ package database
 import (
 	"accounts-service/internal/models"
 	"log"
-	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func Init() *gorm.DB {
-	dsn := os.Getenv("DATABASE_URL") // например: postgres://user:pass@localhost:5432/accounts
+	dsn := "host=db port=5432 user=yonme_admin password=P@ssw0rd dbname=yonme_db"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)

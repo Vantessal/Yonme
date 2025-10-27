@@ -16,6 +16,7 @@ func NewAccountRepository(db *gorm.DB) *AccountRepository {
 }
 
 func (r *AccountRepository) CreateAccount(account *models.Account) error {
+	account.ID = uuid.New()
 	return r.db.Create(account).Error
 }
 
