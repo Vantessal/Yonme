@@ -11,10 +11,11 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data 
+      - ./db/init:/docker-entrypoint-initdb.d
 
   auth-service:
     build:
-      context: ./services/auth-service
+      context: ./server/auth-service
     container_name: yonme_auth_service
     ports:
       - "8082:8082"
@@ -24,8 +25,12 @@ services:
 
   accounts-service:
     build:
-      context: ./services/accounts-service
+      context: ./server/accounts-service
     container_name: yonme_accounts_service
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "8081:8081"
     depends_on:
@@ -37,6 +42,7 @@ services:
       context: .
       dockerfile: ./nginx/dockerfile
     container_name: yonme_nginx
+    restart: always
     ports:
       - "80:80"
     depends_on:

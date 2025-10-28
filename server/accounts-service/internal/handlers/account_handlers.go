@@ -18,9 +18,10 @@ func NewAccountHandler(service *services.AccountService) *AccountHandler {
 }
 
 func (h *AccountHandler) Create(c *gin.Context) {
-	var account models.Account
+	var account models.Account	
 	if err := c.BindJSON(&account); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	
 	if err := h.service.Create(&account); err != nil {
@@ -29,6 +30,7 @@ func (h *AccountHandler) Create(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, account)
 }
+
 func (h *AccountHandler) GetAll(c *gin.Context) {
 	accounts, err := h.service.GetAll()
 	if err != nil {
@@ -41,9 +43,10 @@ func (h *AccountHandler) GetAll(c *gin.Context) {
 func (h *AccountHandler) GetByID(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		return
 	}
+
 	account, err := h.service.GetByID(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -55,11 +58,12 @@ func (h *AccountHandler) GetByID(c *gin.Context) {
 func (h *AccountHandler) Update(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		return
 	}
+
 	var account models.Account
-	if err := c.BindJSON(&account); err != nil {
+	if err := c.ShouldBindJSON(&account); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -75,7 +79,7 @@ func (h *AccountHandler) Update(c *gin.Context) {
 func (h *AccountHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid UUID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid ID"})
 		return
 	}
 
